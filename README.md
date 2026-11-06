@@ -12,7 +12,7 @@ A modern, responsive, and production-quality personal portfolio website for a th
 - **Deep-Dive Project Architecture**: Modal breakdown for projects (such as **SecureAPI Guard** and **MiniIDS**), showcasing system architectures, test results, and engineering limitations.
 - **Confidentiality Respect**: The private startup project (**PROOF – Prove Your Skills**) is protected without exposing proprietary code or architecture.
 - **Real Working CV Download**: Pre-configured with a downloadable, formatted CV (`public/cv.pdf`).
-- **Interactive Timeline & Roadmap**: Chronological Learning Journey and 4-track Professional Development Roadmap with clear *Learning* and *Planned* milestones.
+- **Professional Journey & Education**: A concise, project-led timeline, confirmed education and training details, and a grouped technical focus.
 - **Client-Validated Contact Form**: Real-time validation for name, email, subject, and message, plus one-click email copy action.
 - **Accessibility & Performance**: Keyboard navigation, ARIA attributes, and automatic `@media (prefers-reduced-motion: reduce)` compliance.
 
@@ -43,9 +43,9 @@ portfolio/
         ├── Skills.jsx           # Categorized skills with tabs, search, and badges
         ├── Projects.jsx         # Filterable project showcase
         ├── ProjectModal.jsx     # Deep-dive architecture & limitations modal
-        ├── LearningJourney.jsx  # 10-step visual timeline
-        ├── EducationExperience.jsx # Jimma University & future milestones
-        ├── LearningRoadmap.jsx  # 4-track future development roadmap
+        ├── ProfessionalJourney.jsx # Selected practical work & technical focus
+        ├── EducationExperience.jsx # Jimma University education
+        ├── ProfessionalTraining.jsx # INSA cybersecurity training
         ├── Contact.jsx          # Contact info and validated message form
         ├── Footer.jsx           # Navigation, social links, dynamic year
         └── Icons.jsx            # Crisp vector GitHub & LinkedIn icons

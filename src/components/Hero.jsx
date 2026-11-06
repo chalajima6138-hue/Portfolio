@@ -9,19 +9,20 @@ export default function Hero() {
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      el.scrollIntoView({ behavior });
     }
   };
 
   return (
     <section
       id="hero"
+      className="hero-section"
       style={{
-        minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         paddingTop: 'calc(var(--header-height) + 2rem)',
-        paddingBottom: '4rem',
+        paddingBottom: '2.5rem',
         position: 'relative'
       }}
     >
@@ -30,7 +31,7 @@ export default function Hero() {
           style={{
             display: 'grid',
             gridTemplateColumns: 'minmax(0, 1.25fr) minmax(0, 0.75fr)',
-            gap: '3.5rem',
+            gap: '3rem',
             alignItems: 'center'
           }}
           className="hero-grid-responsive"
@@ -464,6 +465,7 @@ export default function Hero() {
 
         {/* Stats Row */}
         <div
+          className="hero-stats"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -516,19 +518,6 @@ export default function Hero() {
 
       </div>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .hero-grid-responsive {
-            grid-template-columns: 1fr !important;
-            text-align: center;
-          }
-          .hero-grid-responsive > div:first-child {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          }
-        }
-      `}</style>
     </section>
   );
 }

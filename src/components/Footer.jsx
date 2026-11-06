@@ -7,13 +7,15 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    window.scrollTo({ top: 0, behavior });
   };
 
   const handleNavClick = (href) => {
     const el = document.querySelector(href);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      el.scrollIntoView({ behavior });
     }
   };
 
@@ -29,11 +31,12 @@ export default function Footer() {
       <div className="container">
         {/* Top Footer Grid */}
         <div
+          className="footer-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '2.5rem',
-            marginBottom: '3rem'
+            gap: '2rem',
+            marginBottom: '2rem'
           }}
         >
           {/* Identity Column */}

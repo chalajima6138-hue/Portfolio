@@ -20,13 +20,14 @@ export default function ProjectModal({ project, onClose }) {
     };
   }, [onClose]);
 
-  if (!project) return null;
+  if (!project || project.isConfidential) return null;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-project-title"
+      className="project-modal-overlay"
       style={{
         position: 'fixed',
         inset: 0,
@@ -44,7 +45,7 @@ export default function ProjectModal({ project, onClose }) {
       }}
     >
       <div
-        className="glass-card"
+        className="glass-card project-modal-content"
         style={{
           width: '100%',
           maxWidth: '780px',

@@ -5,13 +5,28 @@ node_modules/
 # Build output
 dist/
 
-# Environment files
+# Environment files — NEVER commit real .env
 .env
-.env.*
+.env.local
+.env.production
+
+# Keep .env.example in version control (it has no real secrets)
+!.env.example
+!backend/.env.example
 
 # Logs
 *.log
+npm-debug.log*
 
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Vite temporary files
+*.timestamp-*.mjs
+
+# Test coverage
+backend/coverage/
+
+# Backend node_modules
+backend/node_modules/

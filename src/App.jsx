@@ -6,9 +6,8 @@ import About from './components/About';
 import ProfessionalTraining from './components/ProfessionalTraining';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
-import LearningJourney from './components/LearningJourney';
+import ProfessionalJourney from './components/ProfessionalJourney';
 import EducationExperience from './components/EducationExperience';
-import LearningRoadmap from './components/LearningRoadmap';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
@@ -28,9 +27,8 @@ export default function App() {
         <ProfessionalTraining />
         <Skills />
         <Projects />
-        <LearningJourney />
+        <ProfessionalJourney />
         <EducationExperience />
-        <LearningRoadmap />
         <Contact />
       </main>
 

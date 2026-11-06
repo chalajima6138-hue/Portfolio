@@ -1,296 +1,134 @@
 import React, { useState } from 'react';
-import { FolderGit2, Shield, Lock, ExternalLink, Terminal, Info, ChevronRight, Layers, FileCode, CheckCircle2 } from 'lucide-react';
-import { GithubIcon } from './Icons';
+import { Code2, FolderGit2, Layers, Lock, Shield, Info } from 'lucide-react';
 import { projects } from '../data/portfolioData';
 import ProjectModal from './ProjectModal';
+
+const categories = ['All', 'Cybersecurity', 'Full-Stack', 'Concepts'];
+
+const categoryIcons = {
+  Cybersecurity: Shield,
+  'Full-Stack': Code2,
+  Concepts: Layers
+};
+
+function getStatusColor(statusType) {
+  if (statusType === 'completed') return 'var(--accent-emerald)';
+  if (statusType === 'confidential') return 'var(--accent-amber)';
+  if (statusType === 'concept') return 'var(--accent-cyan)';
+  return 'var(--text-secondary)';
+}
 
 export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeModalProject, setActiveModalProject] = useState(null);
 
-  const categories = ['All', 'Cybersecurity', 'Full-Stack', 'Concepts'];
-
   const filteredProjects = selectedCategory === 'All'
     ? projects
-    : projects.filter((p) => {
-        if (selectedCategory === 'Concepts') {
-          return p.statusType === 'concept';
-        }
-        return p.category === selectedCategory;
-      });
-
-  const getStatusBadge = (statusType, status) => {
-    switch (statusType) {
-      case 'completed':
-        return {
-          bg: 'rgba(16, 185, 129, 0.1)',
-          border: 'rgba(16, 185, 129, 0.35)',
-          color: 'var(--accent-emerald)',
-          text: status
-        };
-      case 'confidential':
-        return {
-          bg: 'rgba(245, 158, 11, 0.1)',
-          border: 'rgba(245, 158, 11, 0.35)',
-          color: 'var(--accent-amber)',
-          text: 'Private & Confidential'
-        };
-      case 'concept':
-        return {
-          bg: 'rgba(56, 189, 248, 0.1)',
-          border: 'rgba(56, 189, 248, 0.35)',
-          color: 'var(--accent-cyan)',
-          text: 'Concept / Work in Progress'
-        };
-      default:
-        return {
-          bg: 'rgba(255, 255, 255, 0.08)',
-          border: 'rgba(255, 255, 255, 0.15)',
-          color: 'var(--text-secondary)',
-          text: status
-        };
-    }
-  };
+    : projects.filter((project) => selectedCategory === 'Concepts'
+      ? project.statusType === 'concept'
+      : project.category === selectedCategory);
 
   return (
-    <section id="projects" className="section" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.04)' }}>
+    <section id="projects" className="section projects-section" aria-labelledby="projects-title">
       <div className="container">
-        
-        {/* Section Header */}
         <div className="section-header">
           <div className="section-tag">
-            <FolderGit2 size={14} />
-            <span>Practical Engineering</span>
+            <FolderGit2 size={14} aria-hidden="true" />
+            <span>Selected Work</span>
           </div>
-          <h2 className="section-title">
-            Featured Projects &amp; Implementations
-          </h2>
+          <h2 className="section-title" id="projects-title">Projects</h2>
           <p className="section-subtitle">
-            A portfolio of practical projects and architectural concepts. Each project reflects genuine code, tested controls, or conceptual problem-solving.
+            Security-focused implementations and software concepts, with their scope clearly identified.
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '0.6rem',
-            marginBottom: '3rem',
-            flexWrap: 'wrap'
-          }}
-        >
-          {categories.map((cat) => (
+        <div className="project-filters" role="group" aria-label="Filter projects">
+          {categories.map((category) => (
             <button
-              key={cat}
               type="button"
-              onClick={() => setSelectedCategory(cat)}
-              style={{
-                padding: '0.55rem 1.25rem',
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                borderRadius: '9999px',
-                background: selectedCategory === cat ? 'var(--accent-cyan)' : 'rgba(15, 23, 42, 0.8)',
-                color: selectedCategory === cat ? '#070b14' : 'var(--text-secondary)',
-                border: selectedCategory === cat ? '1px solid var(--accent-cyan)' : '1px solid rgba(255, 255, 255, 0.1)',
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}
+              key={category}
+              className={`project-filter${selectedCategory === category ? ' is-active' : ''}`}
+              aria-pressed={selectedCategory === category}
+              onClick={() => setSelectedCategory(category)}
             >
-              {cat} {cat === 'All' ? `(${projects.length})` : ''}
+              {category}{category === 'All' ? ` (${projects.length})` : ''}
             </button>
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-            gap: '2rem'
-          }}
-        >
+        <div className="project-grid" aria-live="polite">
           {filteredProjects.map((project) => {
-            const badge = getStatusBadge(project.statusType, project.status);
+            const Icon = categoryIcons[project.category] || Layers;
+            const isConfidential = project.isConfidential;
             return (
-              <div
+              <article
+                className={`project-card${isConfidential ? ' project-card--confidential' : ''}`}
                 key={project.id}
-                className="glass-card"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  padding: '2rem',
-                  border: project.isConfidential
-                    ? '1px solid rgba(245, 158, 11, 0.25)'
-                    : '1px solid rgba(255, 255, 255, 0.08)',
-                  position: 'relative'
-                }}
               >
-                {/* Top Badge Row */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginBottom: '1.25rem',
-                    flexWrap: 'wrap',
-                    gap: '0.5rem'
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '0.725rem',
-                      fontFamily: 'var(--font-mono)',
-                      fontWeight: 600,
-                      padding: '0.2rem 0.6rem',
-                      borderRadius: '4px',
-                      background: badge.bg,
-                      border: `1px solid ${badge.border}`,
-                      color: badge.color
-                    }}
-                  >
-                    {badge.text}
-                  </span>
-
-                  <span
-                    style={{
-                      fontSize: '0.725rem',
-                      fontFamily: 'var(--font-mono)',
-                      color: 'var(--text-muted)'
-                    }}
-                  >
-                    {project.badge}
-                  </span>
+                <div className="project-card__visual" aria-hidden="true">
+                  {isConfidential ? <Lock size={19} /> : <Icon size={19} />}
+                  <span>{isConfidential ? 'Confidential' : project.category}</span>
                 </div>
 
-                {/* Project Title & Subtitle */}
-                <h3
-                  style={{
-                    fontSize: '1.35rem',
-                    fontWeight: 700,
-                    color: '#ffffff',
-                    marginBottom: '0.35rem'
-                  }}
-                >
-                  {project.title}
-                </h3>
+                <div className="project-card__meta">
+                  <span className="project-card__status" style={{ color: getStatusColor(project.statusType) }}>
+                    {isConfidential ? 'Private' : project.status}
+                  </span>
+                  {!isConfidential && <span className="project-card__badge">{project.badge}</span>}
+                </div>
 
-                <p
-                  style={{
-                    fontSize: '0.85rem',
-                    fontFamily: 'var(--font-mono)',
-                    color: 'var(--accent-cyan)',
-                    marginBottom: '1rem'
-                  }}
-                >
-                  {project.subtitle}
+                <h3>{project.title}</h3>
+                <p className="project-card__subtitle">
+                  {isConfidential ? 'Confidential project' : project.subtitle}
+                </p>
+                <p className="project-card__description">
+                  {isConfidential
+                    ? 'This project is private; further information is not shared publicly.'
+                    : project.shortDescription}
                 </p>
 
-                {/* Short Description */}
-                <p
-                  style={{
-                    fontSize: '0.875rem',
-                    color: 'var(--text-secondary)',
-                    lineHeight: 1.6,
-                    marginBottom: '1.5rem',
-                    flexGrow: 1
-                  }}
-                >
-                  {project.shortDescription}
-                </p>
+                {!isConfidential && (
+                  <ul className="project-card__tags" aria-label={`${project.title} technologies`}>
+                    {project.technologies.map((technology) => (
+                      <li className="tech-pill" key={technology}>{technology}</li>
+                    ))}
+                  </ul>
+                )}
 
-                {/* Technologies */}
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '0.4rem',
-                    marginBottom: '1.75rem'
-                  }}
-                >
-                  {project.technologies.map((tech) => (
-                    <span key={tech} className="tech-pill">
-                      {tech}
+                <div className="project-card__actions">
+                  {isConfidential ? (
+                    <span className="project-card__private">
+                      <Lock size={14} aria-hidden="true" />
+                      Details withheld
                     </span>
-                  ))}
-                </div>
-
-                {/* Action Buttons */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '0.75rem',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                    paddingTop: '1.25rem'
-                  }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setActiveModalProject(project)}
-                    className="btn btn-secondary"
-                    style={{
-                      padding: '0.5rem 0.95rem',
-                      fontSize: '0.825rem',
-                      gap: '0.4rem'
-                    }}
-                  >
-                    <Info size={14} style={{ color: 'var(--accent-cyan)' }} />
-                    <span>Deep-Dive &amp; Architecture</span>
-                  </button>
-
-                  {project.isConfidential ? (
-                    <span
-                      title="Proprietary code protected under confidentiality"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.35rem',
-                        fontSize: '0.75rem',
-                        color: 'var(--accent-amber)',
-                        fontFamily: 'var(--font-mono)'
-                      }}
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setActiveModalProject(project)}
+                      className="btn btn-secondary"
+                      aria-label={`View details for ${project.title}`}
                     >
-                      <Lock size={13} />
-                      <span>Private</span>
-                    </span>
-                  ) : project.githubUrl ? (
+                      <Info size={15} aria-hidden="true" />
+                      Project details
+                    </button>
+                  )}
+                  {!isConfidential && project.githubUrl && (
                     <a
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-outline"
-                      style={{
-                        padding: '0.5rem 0.85rem',
-                        fontSize: '0.825rem',
-                        gap: '0.35rem'
-                      }}
-                      title="View GitHub repository"
                     >
-                      <GithubIcon size={14} />
-                      <span>Code</span>
+                      Source code
                     </a>
-                  ) : (
-                    <span
-                      style={{
-                        fontSize: '0.75rem',
-                        color: 'var(--text-muted)',
-                        fontFamily: 'var(--font-mono)'
-                      }}
-                    >
-                      Concept
-                    </span>
                   )}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
-
       </div>
 
-      {/* Deep-Dive Modal */}
       {activeModalProject && (
         <ProjectModal
           project={activeModalProject}

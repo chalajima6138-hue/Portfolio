@@ -5,6 +5,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    open: false
-  }
+    open: false,
+    // Proxy /api requests to the Express backend in development.
+    // This avoids CORS issues when running frontend and backend separately.
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
+    },
+  },
 });

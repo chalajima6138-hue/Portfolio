@@ -5,13 +5,13 @@
  * - profile.js: Personal identity, bio, positioning, contact links
  * - skills.js: Four verified skill domains & honest proficiency levels
  * - projects.js: Detailed projects, architecture, testing & limitations
- * - training.js: INSA 2026 Summer Camp, Jimma University education, roadmap & journey
+ * - training.js: INSA training, education, selected practical work & technical focus
  */
 
 import { profile, navLinks } from './profile';
 import { skillCategories } from './skills';
 import { projects } from './projects';
-import { insaTrainingData, educationData, learningJourney, learningRoadmap } from './training';
+import { insaTrainingData, educationData, professionalJourney } from './training';
 
 // Backward-compatible unified personalInfo object
 export const personalInfo = {
@@ -48,6 +48,5 @@ export {
   projects,
   insaTrainingData,
   educationData,
-  learningJourney,
-  learningRoadmap
+  professionalJourney
 };

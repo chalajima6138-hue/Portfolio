@@ -60,7 +60,7 @@ export const profile = {
     { label: "Academic Standing", value: "3rd Year CS", detail: "Jimma University" },
     { label: "Professional Training", value: "INSA 2026", detail: "Cybersecurity Trainee" },
     { label: "Technical Focus", value: "Cybersecurity", detail: "Web, API & Systems" },
-    { label: "Hands-on Projects", value: "5 Implementations", detail: "Built & Concepts" }
+    { label: "Portfolio Projects", value: "5 Projects", detail: "Implementations & Concepts" }
   ]
 };
 
@@ -72,6 +72,5 @@ export const navLinks = [
   { name: "Projects", href: "#projects" },
   { name: "Journey", href: "#journey" },
   { name: "Education", href: "#education" },
-  { name: "Roadmap", href: "#roadmap" },
   { name: "Contact", href: "#contact" }
 ];

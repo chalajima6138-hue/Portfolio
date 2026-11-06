@@ -14,7 +14,9 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submissionError, setSubmissionError] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copyError, setCopyError] = useState('');
 
   // Validate form fields
   const validate = () => {
@@ -50,12 +52,13 @@ export default function Contact() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setSubmissionError('');
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
 
@@ -65,23 +68,42 @@ export default function Contact() {
     }
 
     setIsSubmitting(true);
+    setSubmissionError('');
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const result = await response.json();
 
-    // Reliable client-side submission simulation
-    setTimeout(() => {
-      setIsSubmitting(false);
+      if (!response.ok || !result.success) {
+        setSubmissionError(result.error || 'Your message could not be sent. Please try again.');
+        return;
+      }
+
       setIsSubmitted(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 600);
+    } catch {
+      setSubmissionError('Unable to reach the contact service. Please try again or email directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(personalInfo.socialLinks.email);
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 2500);
+  const handleCopyEmail = async () => {
+    setCopyError('');
+    try {
+      await navigator.clipboard.writeText(personalInfo.socialLinks.email);
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2500);
+    } catch {
+      setCopyError('Clipboard access is unavailable. Select and copy the email address instead.');
+    }
   };
 
   return (
-    <section id="contact" className="section" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.04)' }}>
+    <section id="contact" className="section contact-section" aria-labelledby="contact-title">
       <div className="container">
         
         {/* Section Header */}
@@ -90,9 +112,7 @@ export default function Contact() {
             <Mail size={14} />
             <span>Get in Touch</span>
           </div>
-          <h2 className="section-title">
-            Connect &amp; Collaborate
-          </h2>
+          <h2 className="section-title" id="contact-title">Connect &amp; Collaborate</h2>
           <p className="section-subtitle">
             Open to cybersecurity internships, full-stack collaborations, software development opportunities, and technical networking.
           </p>
@@ -100,6 +120,7 @@ export default function Contact() {
 
         {/* Contact Layout */}
         <div
+          className="contact-layout"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
@@ -108,10 +129,10 @@ export default function Contact() {
           }}
         >
           {/* Left Column: Direct Channels & Information */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div className="contact-channels" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             
             <div
-              className="glass-card"
+              className="glass-card contact-panel"
               style={{
                 padding: '2rem',
                 border: '1px solid rgba(255, 255, 255, 0.08)'
@@ -182,6 +203,7 @@ export default function Contact() {
                   <button
                     type="button"
                     onClick={handleCopyEmail}
+                    aria-label={copiedEmail ? 'Email address copied' : 'Copy email address'}
                     title="Copy email address"
                     style={{
                       padding: '0.45rem 0.75rem',
@@ -201,6 +223,7 @@ export default function Contact() {
                     <span>{copiedEmail ? 'Copied' : 'Copy'}</span>
                   </button>
                 </div>
+                {copyError && <p className="contact-status" role="status">{copyError}</p>}
 
                 {/* Primary Phone */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -358,7 +381,7 @@ export default function Contact() {
 
           {/* Right Column: Contact Form with Validation */}
           <div
-            className="glass-card"
+            className="glass-card contact-panel"
             style={{
               padding: '2.25rem 2rem',
               border: '1px solid rgba(0, 240, 255, 0.25)'
@@ -373,6 +396,9 @@ export default function Contact() {
 
             {isSubmitted ? (
               <div
+                className="contact-success"
+                role="status"
+                aria-live="polite"
                 style={{
                   padding: '2rem 1.5rem',
                   textAlign: 'center',
@@ -412,10 +438,12 @@ export default function Contact() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <>
+              {submissionError && <p className="contact-status" role="alert">{submissionError}</p>}
+              <form className="contact-form" onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 
                 {/* Name Field */}
-                <div>
+                <div className="contact-field">
                   <label
                     htmlFor="contact-name"
                     style={{
@@ -434,6 +462,9 @@ export default function Contact() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
+                    required
+                    minLength={2}
+                    maxLength={100}
                     placeholder="e.g. Jane Doe"
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? 'name-error' : undefined}
@@ -457,7 +488,7 @@ export default function Contact() {
                 </div>
 
                 {/* Email Field */}
-                <div>
+                <div className="contact-field">
                   <label
                     htmlFor="contact-email"
                     style={{
@@ -476,6 +507,8 @@ export default function Contact() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    required
+                    maxLength={255}
                     placeholder="e.g. jane@example.com"
                     aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? 'email-error' : undefined}
@@ -499,7 +532,7 @@ export default function Contact() {
                 </div>
 
                 {/* Subject Field */}
-                <div>
+                <div className="contact-field">
                   <label
                     htmlFor="contact-subject"
                     style={{
@@ -518,6 +551,9 @@ export default function Contact() {
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
+                    required
+                    minLength={3}
+                    maxLength={200}
                     placeholder="e.g. Cybersecurity Internship / Project Discussion"
                     aria-invalid={!!errors.subject}
                     aria-describedby={errors.subject ? 'subject-error' : undefined}
@@ -541,7 +577,7 @@ export default function Contact() {
                 </div>
 
                 {/* Message Field */}
-                <div>
+                <div className="contact-field">
                   <label
                     htmlFor="contact-message"
                     style={{
@@ -560,6 +596,9 @@ export default function Contact() {
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
+                    required
+                    minLength={10}
+                    maxLength={5000}
                     placeholder="Write your message here (min. 10 characters)..."
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? 'message-error' : undefined}
@@ -596,9 +635,10 @@ export default function Contact() {
                   }}
                 >
                   <Send size={16} />
-                  <span>{isSubmitting ? 'Validating & Sending...' : 'Send Message'}</span>
+                  <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
                 </button>
               </form>
+              </>
             )}
 
           </div>

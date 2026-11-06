@@ -28,7 +28,7 @@ export const projects = [
     ],
     testingResults: "Simulated stress and boundary testing confirmed that burst requests exceeding configured thresholds correctly receive HTTP 429 (Too Many Requests). Heuristic screening successfully identified synthetic injection payloads and produced structured alert logs without application crashes.",
     limitations: "Engineered strictly for educational and demonstration purposes. Threat detection relies on heuristic pattern matching rather than a production-grade Web Application Firewall (WAF) or machine-learning detection engine. Uses local memory storage rather than distributed caching.",
-    githubUrl: "https://github.com/chalajima6138-hue",
+    githubUrl: null,
     isConfidential: false
   },
   {
@@ -52,7 +52,7 @@ export const projects = [
     ],
     testingResults: "Evaluated using synthetic log datasets simulating repeated failed SSH logins and blacklisted IP connections. The parser consistently flagged simulated brute-force sequences and produced accurate console alerts with sub-second execution.",
     limitations: "Functions as an offline, post-event log analyzer. Does not perform real-time kernel packet inspection or live socket sniffing.",
-    githubUrl: "https://github.com/chalajima6138-hue",
+    githubUrl: null,
     isConfidential: false
   },
   {
@@ -63,17 +63,13 @@ export const projects = [
     category: "Full-Stack",
     status: "In Active Development",
     statusType: "confidential",
-    technologies: ["Full-Stack Architecture", "Confidential Tech Stack"],
-    shortDescription: "A confidential early-stage startup concept focused on competency-driven demonstration of technical abilities.",
-    overview: "PROOF is an early-stage startup concept being developed to provide a modern, competency-focused alternative to traditional credentialing, emphasizing verifiable, real-world execution of technical tasks.",
-    architecture: "Proprietary full-stack system architecture. Detailed architecture, backend workflows, and system design remain private to protect intellectual property.",
-    features: [
-      "Competency-driven evaluation models focusing on practical execution over rote memorization",
-      "Secure project demonstration and skill verification concepts",
-      "Proprietary workflow features currently under private iterative development"
-    ],
-    testingResults: "Undergoing internal conceptual validation and prototype exploration.",
-    limitations: "Confidential project. Proprietary business logic, system architecture, and source code are strictly private and not published publicly.",
+    technologies: ["Confidential"],
+    shortDescription: "This project is private; further information is not shared publicly.",
+    overview: "Project details are confidential and are not shared publicly.",
+    architecture: "Project details are confidential and are not shared publicly.",
+    features: [],
+    testingResults: "Project details are confidential and are not shared publicly.",
+    limitations: "Project details are confidential and are not shared publicly.",
     githubUrl: null,
     isConfidential: true
   },
@@ -97,7 +93,7 @@ export const projects = [
     ],
     testingResults: "Entity-Relationship (ER) diagrams and initial schema prototypes validated for relational normalization and primary/foreign key consistency.",
     limitations: "Currently at the conceptual and prototype design stage; full backend integration and production deployment remain in progress.",
-    githubUrl: "https://github.com/chalajima6138-hue",
+    githubUrl: null,
     isConfidential: false
   },
   {
@@ -120,7 +116,7 @@ export const projects = [
     ],
     testingResults: "Layout tested for responsive behavior across viewport widths from 360px to 1920px using browser developer tools.",
     limitations: "Front-end showcase concept focused on visual layout and information presentation. Server-side booking and database persistence are future extensions.",
-    githubUrl: "https://github.com/chalajima6138-hue",
+    githubUrl: null,
     isConfidential: false
   }
 ];

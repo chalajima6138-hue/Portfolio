@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Menu, X, Download, ShieldCheck } from 'lucide-react';
+import { Menu, X, Download, ShieldCheck } from 'lucide-react';
 import { navLinks, personalInfo } from '../data/portfolioData';
 
 export default function Navbar() {
@@ -13,7 +13,7 @@ export default function Navbar() {
       setIsScrolled(window.scrollY > 30);
 
       // Active section detection
-      const sections = ['hero', 'about', 'training', 'skills', 'projects', 'journey', 'education', 'roadmap', 'contact'];
+      const sections = ['hero', 'about', 'training', 'skills', 'projects', 'journey', 'education', 'contact'];
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -45,7 +45,8 @@ export default function Navbar() {
     setMobileMenuOpen(false);
     const target = document.querySelector(href);
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      target.scrollIntoView({ behavior });
     }
   };
 
@@ -192,13 +193,14 @@ export default function Navbar() {
             className="mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
             aria-label="Toggle navigation menu"
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '38px',
-              height: '38px',
+              width: '44px',
+              height: '44px',
               borderRadius: '8px',
               background: 'rgba(15, 23, 42, 0.8)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -214,6 +216,8 @@ export default function Navbar() {
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
         <div
+          id="mobile-navigation"
+          className="mobile-navigation"
           style={{
             position: 'absolute',
             top: 'var(--header-height)',
@@ -230,7 +234,7 @@ export default function Navbar() {
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6)'
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <nav aria-label="Mobile navigation" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -255,7 +259,7 @@ export default function Navbar() {
                 <span style={{ color: 'var(--accent-cyan)', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>→</span>
               </a>
             ))}
-          </div>
+          </nav>
 
           <div style={{ marginTop: '0.5rem' }}>
             <a
